@@ -26,6 +26,7 @@ public class FPSController : MonoBehaviour
     public float headbobAmplitude = 0.02f;
     public float headbobFrequency = 1.5f;
     public Transform cameraTransform;
+    public Transform cameraOffsetTransform;
     public Transform headTransform;
 
     private Vector3 originalCameraPosition;
@@ -37,7 +38,7 @@ public class FPSController : MonoBehaviour
     }
 
     private void Start() {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         originalCameraPosition = cameraTransform.localPosition;
 
     }
@@ -57,7 +58,20 @@ public class FPSController : MonoBehaviour
         xRotation -= mouseY;
         xRotation = Mathf.Clamp(xRotation, -60f, 60f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+        transform.localRotation = Quaternion.Euler(xRotation, -10f, 0f);
+        body.Rotate(Vector3.up * mouseX);
+    }
+
+    private void CameraLookOff() { 
+
+        //Reads the value of Mouse X and Y every frame
+        mouseX = inputManager.inputMaster.CameraLook.MouseX.ReadValue<float>() * mouseSensitivity * Time.deltaTime;
+        mouseY = inputManager.inputMaster.CameraLook.MouseY.ReadValue<float>() * mouseSensitivity * Time.deltaTime;
+
+        xRotation -= mouseY;
+        xRotation = Mathf.Clamp(xRotation, -60f, 60f);
+
+        transform.localRotation = Quaternion.Euler(xRotation, -10f, 0f);
         body.Rotate(Vector3.up * mouseX);
     }
 
